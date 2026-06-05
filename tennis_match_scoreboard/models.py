@@ -28,11 +28,11 @@ class Matches(models.Model):
         db_table = "Matches"
         constraints = [
             models.CheckConstraint(
-                check=~Q(player1=F("player2")),
+                condition=~Q(player1=F("player2")),
                 name="player1_not_player2"
             ),
             models.CheckConstraint(
-                check=Q(winner=F("player1")) | Q(winner=F("player2")),
+                condition=Q(winner=F("player1")) | Q(winner=F("player2")),
                 name="winner_must_be_player1_or_player2"
             ),
         ]
