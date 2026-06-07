@@ -22,7 +22,7 @@ class Matches(models.Model):
     player1 = models.ForeignKey(Players, verbose_name="Player1", on_delete=models.CASCADE, related_name="player1")
     player2 = models.ForeignKey(Players, verbose_name="Player2", on_delete=models.CASCADE, related_name="player2")
     winner = models.ForeignKey(Players, verbose_name="Winner", on_delete=models.CASCADE)
-    score = models.CharField("Score")
+    score = models.JSONField("Score")
 
     class Meta:
         db_table = "Matches"
