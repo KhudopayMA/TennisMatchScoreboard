@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 <html>
 <head>
     <meta charset="UTF-8">
@@ -35,11 +36,16 @@
             <div class="new-match-image"></div>
             <div class="form-container center">
                 <form method="post" action="{% url 'new_match'%}">
-                    <p style="color: red;">Sample error message</p>
-                    <label class="label-player" for="playerOne">Player one</label>
-                    <input class="input-player" placeholder="Name" type="text" required title="Enter a name">
-                    <label class="label-player" for="playerTwo">Player two</label>
-                    <input class="input-player" placeholder="Name" type="text" required title="Enter a name">
+                    <label class="label-player" for="{{ form.player1.auto_id }}">Player one</label>
+                    {{ form.player1|add_required_class:"input-player" }}
+                    {% if form.errors.player1 %}
+                        <p style="color: red;">{{ form.errors.player1 }}</p>
+                    {% endif %}
+                    <label class="label-player" for="{{ form.player2.auto_id }}">Player two</label>
+                    {{ form.player2|add_required_class:"input-player" }}
+                    {% if form.errors.player2 %}
+                        <p style="color: red;">{{ form.errors.player2 }}</p>
+                    {% endif %}
                     <input class="form-button" type="submit" value="Start">
                 </form>
             </div>
