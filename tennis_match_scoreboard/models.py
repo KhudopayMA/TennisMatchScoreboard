@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import F, Q
 
 
-class Players(models.Model):
+class Player(models.Model):
     id = models.BigAutoField("ID", primary_key=True)
     name = models.CharField("Name", max_length=100)
 
@@ -12,16 +12,16 @@ class Players(models.Model):
         db_table = "Players"
 
 
-class Matches(models.Model):
+class Match(models.Model):
     id = models.BigAutoField("ID", primary_key=True)
     uuid = models.UUIDField(
         "UUID",
         default=uuid.uuid4,
         editable=False
         )
-    player1 = models.ForeignKey(Players, verbose_name="Player1", on_delete=models.CASCADE, related_name="player1")
-    player2 = models.ForeignKey(Players, verbose_name="Player2", on_delete=models.CASCADE, related_name="player2")
-    winner = models.ForeignKey(Players, verbose_name="Winner", on_delete=models.CASCADE)
+    player1 = models.ForeignKey(Player, verbose_name="Player1", on_delete=models.CASCADE, related_name="player1")
+    player2 = models.ForeignKey(Player, verbose_name="Player2", on_delete=models.CASCADE, related_name="player2")
+    winner = models.ForeignKey(Player, null=True, verbose_name="Winner", on_delete=models.CASCADE)
     score = models.JSONField("Score")
 
     class Meta:
