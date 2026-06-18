@@ -37,6 +37,9 @@
         <div class="current-match-image"></div>
         <section class="score">
             <form method="post" action="{% url 'match_score'%}">
+                {% if winner %}
+                <p class="winner">The player {{ winner.name }} won</p>
+                {% endif %}
             <table class="table">
                 <thead class="result">
                 <tr>
@@ -52,18 +55,22 @@
                     <td class="table-text">{{ player1_score.sets }}</td>
                     <td class="table-text">{{ player1_score.won_games }}</td>
                     <td class="table-text">{{ player1_score.current_game.points }}</td>
-                    <td class="table-text">
-                        <button  class="score-btn" name="player_name" value={{player1.name}}>Score</button >
-                    </td>
+                    {% if not winner %}
+                        <td class="table-text">
+                            <button  class="score-btn" name="player_name" value={{player1.name}}>Score</button >
+                        </td>
+                    {% endif %}
                 </tr>
                 <tr class="player2">
                     <td class="table-text">{{ player2.name }}</td>
                     <td class="table-text">{{ player2_score.sets }}</td>
                     <td class="table-text">{{ player2_score.won_games }}</td>
                     <td class="table-text">{{ player2_score.current_game.points }}</td>
+                    {% if not winner %}
                     <td class="table-text">
                         <button  class="score-btn" name="player_name" value={{player2.name}}>Score</button >
                     </td>
+                    {% endif %}
                 </tr>
                 </tbody>
             </table>

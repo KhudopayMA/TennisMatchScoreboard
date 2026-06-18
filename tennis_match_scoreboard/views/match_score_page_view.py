@@ -28,9 +28,8 @@ class MatchScorePageView(View):
         match_uuid = request.COOKIES.get("match_uuid")
         player_name = request.POST.get("player_name")
         score_service = ScoreService(match_uuid=match_uuid)
-        score_service.add_point(player_name=player_name)
-        if score_service.match.winner:
-            return HttpResponse()
+        if not score_service.match.winner:
+            score_service.add_point(player_name=player_name)
         return HttpResponse(
             render_to_string(
                 "tennis_match_scoreboard/match-score.html",
@@ -38,7 +37,8 @@ class MatchScorePageView(View):
                     "player1": score_service.match.player1,
                     "player1_score": score_service.match_score.player1,
                     "player2": score_service.match.player2,
-                    "player2_score": score_service.match_score.player2
+                    "player2_score": score_service.match_score.player2,
+                    "winner": score_service.match.winner
                 }
             )
         )
