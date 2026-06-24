@@ -27,7 +27,7 @@ class NewMatchPageView(View):
                 )
                 url = reverse("match_score") + "?" + urlencode({"uuid": match_uuid})
                 response = redirect(url, uuid=match_uuid, permanent=True)
-                response.set_cookie("match_uuid", match_uuid)
+                response.set_cookie("match_uuid", str(match_uuid))
                 return response
 
         return HttpResponse(
