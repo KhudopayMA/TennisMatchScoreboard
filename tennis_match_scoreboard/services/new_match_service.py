@@ -12,7 +12,7 @@ class NewMatchService:
     """
 
     @staticmethod
-    def create_match(player1: Player, player2: Player) -> Optional[UUID]:
+    def create_match(player1: Player, player2: Player) -> UUID:
         player1 = Player.objects.get_or_create(name=player1)[0]
         player2 = Player.objects.get_or_create(name=player2)[0]
         match_score = MatchScoreDto(

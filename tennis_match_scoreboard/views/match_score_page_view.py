@@ -1,4 +1,4 @@
-from django.http import HttpResponse, HttpRequest
+from django.http import HttpResponse, HttpRequest, Http404, HttpResponseBadRequest
 from django.template.loader import render_to_string
 from django.views import View
 
@@ -10,6 +10,8 @@ from tennis_match_scoreboard.services import ScoreService
 class MatchScorePageView(View):
     def get(self, request: HttpRequest):
         match_uuid = request.COOKIES.get("match_uuid")
+        if match_uuid is None:
+            raise Http404("Match not found")
         match = Match.objects.get(uuid=match_uuid)
         match_score = MatchScoreDto(**match.score)
         return HttpResponse(
@@ -27,6 +29,8 @@ class MatchScorePageView(View):
     def post(self, request: HttpRequest):
         match_uuid = request.COOKIES.get("match_uuid")
         player_name = request.POST.get("player_name")
+        if player_name is None:
+            return HttpResponseBadRequest("player_name param not found in request.")
         score_service = ScoreService(match_uuid=match_uuid)
         if not score_service.match.winner:
             score_service.add_point(player_name=player_name)
