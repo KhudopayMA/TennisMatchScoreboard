@@ -23,7 +23,7 @@ class NewMatchPageView(View):
             if not form.errors:
                 match_uuid = NewMatchService.create_match(
                     player1=form.cleaned_data["player1"],
-                    player2=form.cleaned_data["player2"]
+                    player2=form.cleaned_data["player2"],
                 )
                 url = reverse("match_score") + "?" + urlencode({"uuid": match_uuid})
                 response = redirect(url, uuid=match_uuid, permanent=True)

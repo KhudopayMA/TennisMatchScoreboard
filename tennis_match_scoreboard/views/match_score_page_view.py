@@ -21,8 +21,8 @@ class MatchScorePageView(View):
                     "player1": match.player1,
                     "player1_score": match_score.player1,
                     "player2": match.player2,
-                    "player2_score": match_score.player2
-                }
+                    "player2_score": match_score.player2,
+                },
             )
         )
 
@@ -42,8 +42,7 @@ class MatchScorePageView(View):
                     "player1_score": score_service.match_score.player1,
                     "player2": score_service.match.player2,
                     "player2_score": score_service.match_score.player2,
-                    "winner": score_service.match.winner
-                }
+                    "winner": score_service.match.winner,
+                },
             )
         )
-

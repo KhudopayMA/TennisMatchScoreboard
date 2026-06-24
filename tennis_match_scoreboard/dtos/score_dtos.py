@@ -19,6 +19,3 @@ class MatchScoreDto:
     player1: PlayerScoreDto
     player2: PlayerScoreDto
     tie_break: bool
-
-
-
