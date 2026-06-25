@@ -16,10 +16,16 @@ class Match(models.Model):
     id = models.BigAutoField("ID", primary_key=True)
     uuid = models.UUIDField("UUID", default=uuid.uuid4, editable=False)
     player1 = models.ForeignKey(
-        Player, verbose_name="Player1", on_delete=models.CASCADE, related_name="player1"
+        Player,
+        verbose_name="Player1",
+        on_delete=models.CASCADE,
+        related_name="player1",
     )
     player2 = models.ForeignKey(
-        Player, verbose_name="Player2", on_delete=models.CASCADE, related_name="player2"
+        Player,
+        verbose_name="Player2",
+        on_delete=models.CASCADE,
+        related_name="player2",
     )
     winner = models.ForeignKey(
         Player, null=True, verbose_name="Winner", on_delete=models.CASCADE

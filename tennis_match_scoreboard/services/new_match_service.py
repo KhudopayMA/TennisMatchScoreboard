@@ -1,8 +1,8 @@
-from uuid import UUID
 from dataclasses import asdict
+from uuid import UUID
 
-from tennis_match_scoreboard.dtos import MatchScoreDto, PlayerScoreDto, GameDto
-from tennis_match_scoreboard.models import Player, Match
+from tennis_match_scoreboard.dtos import GameDto, MatchScoreDto, PlayerScoreDto
+from tennis_match_scoreboard.models import Match, Player
 
 
 class NewMatchService:
@@ -16,10 +16,14 @@ class NewMatchService:
         player2 = Player.objects.get_or_create(name=player2)[0]
         match_score = MatchScoreDto(
             player1=PlayerScoreDto(
-                sets=0, won_games=0, current_game=GameDto(points=0, advantage=False)
+                sets=0,
+                won_games=0,
+                current_game=GameDto(points=0, advantage=False),
             ),
             player2=PlayerScoreDto(
-                sets=0, won_games=0, current_game=GameDto(points=0, advantage=False)
+                sets=0,
+                won_games=0,
+                current_game=GameDto(points=0, advantage=False),
             ),
             tie_break=False,
         )

@@ -1,6 +1,11 @@
 from django.urls import path
 
-from .views import MainPageView, MatchesPageView, MatchScorePageView, NewMatchPageView
+from .views import (
+    MainPageView,
+    MatchesPageView,
+    MatchScorePageView,
+    NewMatchPageView,
+)
 
 urlpatterns = [
     path("", MainPageView.as_view(), name="index"),
