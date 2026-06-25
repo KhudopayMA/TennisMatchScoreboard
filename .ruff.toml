@@ -1,5 +1,5 @@
 exclude = [
-    "config/**.py",
-    "migrations/**.py",
+    "*/config",
+    "*/migrations",
     "manage.py",
 ]
