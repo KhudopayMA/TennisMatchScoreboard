@@ -30,9 +30,12 @@ jobs:
       - name: Install project dependencies
         run: uv sync --frozen
 
-      - name: run Ruff
+      - name: run Ruff linter
         run:
           uv run ruff check .
+
+      - name: run Ruff formatter
+        run:
           uv run ruff format --check
 
       - name: Run MyPy
