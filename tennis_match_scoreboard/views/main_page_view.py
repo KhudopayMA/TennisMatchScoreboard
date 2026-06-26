@@ -4,6 +4,6 @@ from django.views import View
 
 
 class MainPageView(View):
-    def get(self, request: HttpRequest):
+    def get(self, request: HttpRequest) -> HttpResponse:
         t = render_to_string("tennis_match_scoreboard/index.html")
         return HttpResponse(t)

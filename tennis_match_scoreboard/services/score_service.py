@@ -11,9 +11,9 @@ class ScoreService:
     Service class for handling business logic of the score.
     """
 
-    TENNIS_POINTS: bidict = bidict({0: 0, 1: 15, 2: 30, 3: 40})
+    TENNIS_POINTS: bidict[int, int] = bidict({0: 0, 1: 15, 2: 30, 3: 40})
 
-    def __init__(self, match_uuid):
+    def __init__(self, match_uuid: str) -> None:
         self.match = Match.objects.get(uuid=match_uuid)
         self.match_score = MatchScoreDto(
             player1=PlayerScoreDto(
@@ -33,7 +33,7 @@ class ScoreService:
             tie_break=self.match.score["tie_break"],
         )
 
-    def add_point(self, player_name: str):
+    def add_point(self, player_name: str) -> None:
         if self.match.player1.name == player_name:
             self.__add_standard_point(1)
         elif self.match.player2.name == player_name:
@@ -41,7 +41,7 @@ class ScoreService:
         self.match.score = asdict(self.match_score)
         self.match.save()
 
-    def __add_standard_point(self, player_number: int):
+    def __add_standard_point(self, player_number: int) -> None:
         if self.match_score.tie_break:
             self.__add_tie_break_point(player_number)
         else:
@@ -106,7 +106,7 @@ class ScoreService:
                     ) == 2:
                         self.match_score.player1.won_games += 1
 
-    def __add_game(self, player_number: int):
+    def __add_game(self, player_number: int) -> None:
         if player_number == 1:
             self.match_score.player1.won_games += 1
             if self.match_score.player1.won_games >= 4 and (
@@ -129,7 +129,7 @@ class ScoreService:
                 self.match_score.player2.won_games = 0
                 self.__add_set(2)
 
-    def __add_set(self, player_number: int):
+    def __add_set(self, player_number: int) -> None:
         if player_number == 1:
             self.match_score.player1.sets = self.match_score.player1.sets + 1
             if self.match_score.player1.sets == self.match_score.player2.sets:
@@ -152,7 +152,7 @@ class ScoreService:
         player_game.points = 0
         player_game.advantage = False
 
-    def __add_tie_break_point(self, player_number: int):
+    def __add_tie_break_point(self, player_number: int) -> None:
         if player_number == 1 or player_number == 2:
             self.match_score.player1.current_game.points += 1
 
