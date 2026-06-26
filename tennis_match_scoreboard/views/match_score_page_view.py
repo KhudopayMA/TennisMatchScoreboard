@@ -1,4 +1,9 @@
-from django.http import HttpResponse, HttpRequest, Http404, HttpResponseBadRequest
+from django.http import (
+    Http404,
+    HttpRequest,
+    HttpResponse,
+    HttpResponseBadRequest,
+)
 from django.template.loader import render_to_string
 from django.views import View
 
@@ -30,7 +35,9 @@ class MatchScorePageView(View):
         match_uuid = request.COOKIES.get("match_uuid")
         player_name = request.POST.get("player_name")
         if player_name is None:
-            return HttpResponseBadRequest("player_name param not found in request.")
+            return HttpResponseBadRequest(
+                "player_name param not found in request."
+            )
         score_service = ScoreService(match_uuid=match_uuid)
         if not score_service.match.winner:
             score_service.add_point(player_name=player_name)

@@ -1,4 +1,4 @@
-from .score_dtos import PlayerScoreDto, MatchScoreDto, GameDto
+from .score_dtos import GameDto, MatchScoreDto, PlayerScoreDto
 
 __all__ = [
     "PlayerScoreDto",
