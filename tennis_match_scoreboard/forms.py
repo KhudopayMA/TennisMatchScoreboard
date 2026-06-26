@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 from django import forms
 from django.core.exceptions import ValidationError
@@ -8,7 +8,7 @@ class NewMatchForm(forms.Form):
     player1 = forms.CharField(max_length=100, required=True)
     player2 = forms.CharField(max_length=100, required=True)
 
-    def clean(self) -> Optional[dict[str, Any]]:
+    def clean(self) -> dict[str, Any] | None:
         cleaned_data = super().clean()
         if cleaned_data is None:
             raise ValidationError("The names of the players were not found.")
