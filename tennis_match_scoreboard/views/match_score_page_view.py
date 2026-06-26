@@ -13,7 +13,7 @@ from tennis_match_scoreboard.services import ScoreService
 
 
 class MatchScorePageView(View):
-    def get(self, request: HttpRequest):
+    def get(self, request: HttpRequest) -> HttpResponse:
         match_uuid = request.COOKIES.get("match_uuid")
         if match_uuid is None:
             raise Http404("Match not found")
@@ -31,8 +31,12 @@ class MatchScorePageView(View):
             )
         )
 
-    def post(self, request: HttpRequest):
+    def post(self, request: HttpRequest) -> HttpResponse:
         match_uuid = request.COOKIES.get("match_uuid")
+        if match_uuid is None:
+            return HttpResponseBadRequest(
+                "match_uuid param not found in request."
+            )
         player_name = request.POST.get("player_name")
         if player_name is None:
             return HttpResponseBadRequest(

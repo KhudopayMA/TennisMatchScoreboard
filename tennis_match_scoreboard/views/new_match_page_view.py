@@ -11,7 +11,7 @@ from tennis_match_scoreboard.services import NewMatchService
 
 
 class NewMatchPageView(View):
-    def get(self, request: HttpRequest):
+    def get(self, request: HttpRequest) -> HttpResponse:
         form = NewMatchForm()
         return HttpResponse(
             render_to_string(
@@ -19,7 +19,7 @@ class NewMatchPageView(View):
             )
         )
 
-    def post(self, request: HttpRequest):
+    def post(self, request: HttpRequest) -> HttpResponse:
         form = NewMatchForm(request.POST)
         if form.is_valid() and not form.errors:
                 match_uuid = NewMatchService.create_match(
