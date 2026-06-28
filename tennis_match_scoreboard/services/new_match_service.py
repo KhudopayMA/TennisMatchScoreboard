@@ -17,12 +17,12 @@ class NewMatchService:
         match_score = MatchScoreDto(
             player1=PlayerScoreDto(
                 sets=0,
-                won_games=0,
+                games=0,
                 current_game=GameDto(points=0, advantage=False),
             ),
             player2=PlayerScoreDto(
                 sets=0,
-                won_games=0,
+                games=0,
                 current_game=GameDto(points=0, advantage=False),
             ),
             tie_break=False,

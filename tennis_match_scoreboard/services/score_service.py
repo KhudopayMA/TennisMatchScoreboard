@@ -18,14 +18,14 @@ class ScoreService:
         self.match_score = MatchScoreDto(
             player1=PlayerScoreDto(
                 sets=self.match.score["player1"]["sets"],
-                won_games=self.match.score["player1"]["won_games"],
+                games=self.match.score["player1"]["games"],
                 current_game=GameDto(
                     **self.match.score["player1"]["current_game"]
                 ),
             ),
             player2=PlayerScoreDto(
                 sets=self.match.score["player2"]["sets"],
-                won_games=self.match.score["player2"]["won_games"],
+                games=self.match.score["player2"]["games"],
                 current_game=GameDto(
                     **self.match.score["player2"]["current_game"]
                 ),
@@ -34,141 +34,95 @@ class ScoreService:
         )
 
     def add_point(self, player_name: str) -> None:
-        if self.match.player1.name == player_name:
-            self.__add_standard_point(1)
-        elif self.match.player2.name == player_name:
-            self.__add_standard_point(2)
+        point_winner, point_loser = self.__resolve_players(player_name)
+        if self.match_score.tie_break:
+            self.__add_tie_break_point(point_winner, point_loser)
+        else:
+            self.__add_standard_point(point_winner, point_loser)
         self.match.score = asdict(self.match_score)
         self.match.save()
 
-    def __add_standard_point(self, player_number: int) -> None:
-        if self.match_score.tie_break:
-            self.__add_tie_break_point(player_number)
+    def __resolve_players(
+        self, player_name: str
+    ) -> tuple[PlayerScoreDto, PlayerScoreDto]:
+        if self.match.player1.name == player_name:
+            return self.match_score.player1, self.match_score.player2
         else:
-            if player_number == 1:
-                if self.match_score.player1.current_game.advantage:
-                    self.__reset_game(self.match_score.player1.current_game)
-                    self.__add_game(player_number)
-                elif self.match_score.player2.current_game.advantage:
-                    self.match_score.player2.current_game.advantage = False
-                    return
-                elif (
-                    self.match_score.player1.current_game.points == 40
-                    and self.match_score.player2.current_game.points == 40
-                ):
-                    self.match_score.player1.current_game.advantage = True
-                    return
-                elif self.match_score.player1.current_game.points == 40:
-                    self.__reset_game(self.match_score.player1.current_game)
-                    self.__add_game(player_number)
-                else:
-                    self.match_score.player1.current_game.points = (
-                        self.TENNIS_POINTS[
-                            self.TENNIS_POINTS.inverse[
-                                self.match_score.player1.current_game.points
-                            ]
-                            + 1
-                        ]
-                    )
-                    if (
-                        self.match_score.player1.current_game.points
-                        - self.match_score.player2.current_game.points
-                    ) == 2:
-                        self.match_score.player1.won_games += 1
-            elif player_number == 2:
-                if self.match_score.player2.current_game.advantage:
-                    self.__reset_game(self.match_score.player2.current_game)
-                    self.__add_game(player_number)
-                elif self.match_score.player1.current_game.advantage:
-                    self.match_score.player1.current_game.advantage = False
-                    return
-                elif (
-                    self.match_score.player1.current_game.points == 40
-                    and self.match_score.player2.current_game.points == 40
-                ):
-                    self.match_score.player2.current_game.advantage = True
-                    return
-                elif self.match_score.player2.current_game.points == 40:
-                    self.__reset_game(self.match_score.player1.current_game)
-                    self.__add_game(player_number)
-                else:
-                    self.match_score.player2.current_game.points = (
-                        self.TENNIS_POINTS[
-                            self.TENNIS_POINTS.inverse[
-                                self.match_score.player2.current_game.points
-                            ]
-                            + 1
-                        ]
-                    )
-                    if (
-                        self.match_score.player2.current_game.points
-                        - self.match_score.player1.current_game.points
-                    ) == 2:
-                        self.match_score.player1.won_games += 1
+            return self.match_score.player2, self.match_score.player1
 
-    def __add_game(self, player_number: int) -> None:
-        if player_number == 1:
-            self.match_score.player1.won_games += 1
-            if self.match_score.player1.won_games >= 4 and (
-                (
-                    self.match_score.player1.won_games
-                    - self.match_score.player2.won_games
-                )
+    def __add_standard_point(
+        self, point_winner: PlayerScoreDto, point_loser: PlayerScoreDto
+    ) -> None:
+        """
+        Implements logic of adding standard points.
+        """
+        if point_winner.current_game.advantage:
+            self.__add_game(point_winner, point_loser)
+        elif point_loser.current_game.advantage:
+            point_loser.current_game.advantage = False
+        elif (
+            point_winner.current_game.points == 40
+            and point_loser.current_game.points == 40
+        ):
+            point_winner.current_game.advantage = True
+        else:
+            point_winner.current_game.points = self.TENNIS_POINTS[
+                self.TENNIS_POINTS.inverse[point_winner.current_game.points]
+                + 1
+            ]
+            if point_winner.current_game.points == 40 and (
+                self.TENNIS_POINTS.inverse[point_winner.current_game.points]
+                - self.TENNIS_POINTS.inverse[point_loser.current_game.points]
                 >= 2
             ):
-                self.match_score.player1.won_games = 0
-                self.__add_set(1)
-        elif player_number == 2:
-            if self.match_score.player2.won_games >= 4 and (
-                (
-                    self.match_score.player2.won_games
-                    - self.match_score.player2.won_games
-                )
-                >= 2
-            ):
-                self.match_score.player2.won_games = 0
-                self.__add_set(2)
+                self.__add_game(point_winner, point_loser)
 
-    def __add_set(self, player_number: int) -> None:
-        if player_number == 1:
-            self.match_score.player1.sets = self.match_score.player1.sets + 1
-            if self.match_score.player1.sets == self.match_score.player2.sets:
-                self.match_score.tie_break = True
-            elif (
-                self.match_score.player1.sets - self.match_score.player2.sets
-            ) == 2:
-                self.match.winner = self.match.player1
-        elif player_number == 2:
-            self.match_score.player2.sets = self.match_score.player2.sets + 1
-            if self.match_score.player1.sets == self.match_score.player2.sets:
-                self.match_score.tie_break = True
-            elif (
-                self.match_score.player2.sets - self.match_score.player1.sets
-            ) == 2:
-                self.match.winner = self.match.player2
+    def __add_game(
+        self, point_winner: PlayerScoreDto, point_loser: PlayerScoreDto
+    ) -> None:
+        self.__reset_game()
+        point_winner.games += 1
+        if point_winner.games == 6 and point_loser.games == 6:
+            self.match_score.tie_break = True
+        elif point_winner.games >= 6 and (
+            point_winner.games - point_loser.games >= 2
+        ):
+            self.__add_set(point_winner)
 
-    @staticmethod
-    def __reset_game(player_game: GameDto) -> None:
-        player_game.points = 0
-        player_game.advantage = False
+    def __add_set(self, point_winner: PlayerScoreDto) -> None:
+        self.__reset_set()
+        point_winner.sets += 1
+        if point_winner.sets >= 2:
+            self.match.winner = (
+                self.match.player1
+                if point_winner is self.match_score.player1
+                else self.match.player2
+            )
 
-    def __add_tie_break_point(self, player_number: int) -> None:
-        if player_number == 1 or player_number == 2:
-            self.match_score.player1.current_game.points += 1
+    def __reset_game(self) -> None:
+        self.match_score.player1.current_game.points = 0
+        self.match_score.player2.current_game.points = 0
 
-        if self.match_score.player1.current_game.points >= 7 and (
-            (
-                self.match_score.player1.current_game.points
-                - self.match_score.player2.current_game.points
+        self.match_score.player1.current_game.advantage = False
+        self.match_score.player2.current_game.advantage = False
+
+    def __reset_set(self) -> None:
+        self.match_score.player1.games = 0
+        self.match_score.player2.games = 0
+
+    def __add_tie_break_point(
+        self, point_winner: PlayerScoreDto, point_loser: PlayerScoreDto
+    ) -> None:
+        """
+        Implements logic of tie-break.
+        """
+        point_winner.current_game.points += 1
+        if (
+            point_winner.current_game.points >= 7
+            and (
+                point_winner.current_game.points
+                - point_loser.current_game.points
             )
             >= 2
         ):
-            self.match.winner = self.match.player1
-        elif self.match_score.player2.current_game.points >= 7 and (
-            (
-                self.match_score.player2.current_game.points
-                - self.match_score.player1.current_game.points
-            )
-            >= 2
-        ):
-            self.match.winner = self.match.player2
+            self.__add_set(point_winner)
