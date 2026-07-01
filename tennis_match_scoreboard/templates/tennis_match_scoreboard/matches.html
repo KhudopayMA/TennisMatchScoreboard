@@ -35,7 +35,7 @@
         <div class="input-container">
             <input class="input-filter" placeholder="Filter by name" type="text" />
             <div>
-                <a href="#">
+                <a href="{% url 'matches'%}?">
                     <button class="btn-filter">Reset Filter</button>
                 </a>
             </div>
@@ -47,39 +47,32 @@
                 <th>Player Two</th>
                 <th>Winner</th>
             </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Roger Federer</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Roger Federer</span></td>
-            </tr>
-            <tr>
-                <td>Rafael Nadal</td>
-                <td>Roger Federer</td>
-                <td><span class="winner-name-td">Rafael Nadal</span></td>
-            </tr>
+            {% for match in matches %}
+                <tr>
+                    <td>{{match.player1.name}}</td>
+                    <td>{{match.player2.name}}</td>
+                    <td><span class="winner-name-td">{{match.winner.name}}</span></td>
+                </tr>
+            {% endfor %}
         </table>
 
         <div class="pagination">
-            <a class="prev" href="#"> < </a>
-            <a class="num-page current" href="#">1</a>
-            <a class="num-page" href="#">2</a>
-            <a class="num-page" href="#">3</a>
-            <a class="next" href="#"> > </a>
+            {% if page_obj.has_previous %}
+                <a class="prev" href="{% url 'matches'%}?page={{matches.previous_page_number}}"> < </a>
+            {% else %}
+                <a class="prev" href="{% url 'matches'%}?page=1"> < </a>
+            {% endif %}
+
+            <a class="num-page current" href="{% url 'matches'%}?page={{matches.number}}">{{matches.number}}</a>
+
+            {% if matches.number|add:1 <= matches.paginator.num_pages %}
+                <a class="num-page" href="{% url 'matches'%}?page={{matches.number|add:1}}">{{matches.number|add:1}}</a>
+            {% endif %}
+
+            {% if matches.number|add:2 <= matches.paginator.num_pages %}
+                <a class="num-page" href="{% url 'matches'%}?page={{matches.number|add:2}}">{{matches.number|add:2}}</a>
+            {% endif %}
+            <a class="next" href="{% url 'matches'%}?page={{matches.next_page_number}}"> > </a>
         </div>
     </div>
 </main>
