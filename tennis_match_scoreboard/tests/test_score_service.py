@@ -1,11 +1,11 @@
-from unittest.mock import patch
 from dataclasses import asdict
+from unittest.mock import patch
 
 import pytest
 
-from tennis_match_scoreboard.dtos import MatchScoreDto, GameDto, PlayerScoreDto
-from tennis_match_scoreboard.services import ScoreService
+from tennis_match_scoreboard.dtos import GameDto, MatchScoreDto, PlayerScoreDto
 from tennis_match_scoreboard.models import Match, Player
+from tennis_match_scoreboard.services import ScoreService
 
 
 @pytest.fixture
@@ -98,7 +98,9 @@ class TestScoreService:
                 )
                 assert score_service.match.winner is None
 
-    def test_add_point_player_win_game(self, player1_next_point_win_game_match: Match) -> None:
+    def test_add_point_player_win_game(
+        self, player1_next_point_win_game_match: Match
+    ) -> None:
 
         with patch(
             "tennis_match_scoreboard.models.Match.objects"
@@ -106,13 +108,17 @@ class TestScoreService:
             mock_objects.get.return_value = player1_next_point_win_game_match
 
             with patch.object(Match, "save", return_value=None):
-                score_service = ScoreService(str(player1_next_point_win_game_match.uuid))
+                score_service = ScoreService(
+                    str(player1_next_point_win_game_match.uuid)
+                )
                 score_service.add_point("first")
 
                 assert score_service.match_score.player1.games > 0
-                assert score_service.match_score.player1.current_game.points == 0
+                assert (
+                    score_service.match_score.player1.current_game.points == 0
+                )
 
-    def test_tie_break_starts(self, next_point_starts_tie_break_match: Match):
+    def test_tie_break_starts(self, next_point_starts_tie_break_match: Match) -> None:
 
         with patch(
             "tennis_match_scoreboard.models.Match.objects"
@@ -120,7 +126,9 @@ class TestScoreService:
             mock_objects.get.return_value = next_point_starts_tie_break_match
 
             with patch.object(Match, "save", return_value=None):
-                score_service = ScoreService(str(next_point_starts_tie_break_match.uuid))
+                score_service = ScoreService(
+                    str(next_point_starts_tie_break_match.uuid)
+                )
                 score_service.add_point("first")
 
                 assert score_service.match_score.tie_break is True
