@@ -20,9 +20,11 @@ class MatchesPageView(View):
         else:
             matches = Match.objects.all()
         paginator = Paginator(matches, 5)
-        page_number = request.GET.get("page")
-        if page_number is None:
+        request_page_number = request.GET.get("page")
+        if request_page_number is None:
             page_number = 1
+        else:
+            page_number = int(request_page_number)
         page_matches = paginator.get_page(page_number)
         filter_form = MatchesFilterForm()
         t = render_to_string(
