@@ -118,7 +118,9 @@ class TestScoreService:
                     score_service.match_score.player1.current_game.points == 0
                 )
 
-    def test_tie_break_starts(self, next_point_starts_tie_break_match: Match) -> None:
+    def test_tie_break_starts(
+        self, next_point_starts_tie_break_match: Match
+    ) -> None:
 
         with patch(
             "tennis_match_scoreboard.models.Match.objects"
