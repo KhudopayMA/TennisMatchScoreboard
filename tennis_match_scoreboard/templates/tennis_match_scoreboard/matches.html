@@ -1,4 +1,5 @@
 {% load static %}
+{% load widget_tweaks %}
 <html>
 <head>
     <meta charset="UTF-8">
@@ -31,15 +32,13 @@
 </header>
 <main>
     <div class="container">
-        <h1>Matches</h1>
-        <div class="input-container">
-            <input class="input-filter" placeholder="Filter by name" type="text" />
-            <div>
-                <a href="{% url 'matches'%}?">
-                    <button class="btn-filter">Reset Filter</button>
-                </a>
+        <form method="get" action="{% url 'matches'%}">
+            <h1>Matches</h1>
+            <div class="input-container">
+                {{ form.player_name|add_required_class:"input-filter" }}
+                <button class="btn-filter" type="submit">Filter</button>
             </div>
-        </div>
+        </form>
 
         <table class="table-matches">
             <tr>
@@ -57,7 +56,7 @@
         </table>
 
         <div class="pagination">
-            {% if page_obj.has_previous %}
+            {% if matches.has_previous %}
                 <a class="prev" href="{% url 'matches'%}?page={{matches.previous_page_number}}"> < </a>
             {% else %}
                 <a class="prev" href="{% url 'matches'%}?page=1"> < </a>
@@ -72,7 +71,12 @@
             {% if matches.number|add:2 <= matches.paginator.num_pages %}
                 <a class="num-page" href="{% url 'matches'%}?page={{matches.number|add:2}}">{{matches.number|add:2}}</a>
             {% endif %}
-            <a class="next" href="{% url 'matches'%}?page={{matches.next_page_number}}"> > </a>
+
+            {% if matches.has_next %}
+                <a class="next" href="{% url 'matches'%}?page={{matches.next_page_number}}"> > </a>
+            {% else %}
+                <a class="next" href="{% url 'matches'%}?page={{matches.number}}"> > </a>
+            {% endif %}
         </div>
     </div>
 </main>

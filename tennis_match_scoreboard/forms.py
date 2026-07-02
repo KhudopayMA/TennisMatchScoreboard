@@ -15,3 +15,13 @@ class NewMatchForm(forms.Form):
         if cleaned_data["player1"] == cleaned_data["player2"]:
             raise ValidationError("Players must have different names.")
         return cleaned_data
+
+
+class MatchesFilterForm(forms.Form):
+    player_name = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(
+            attrs={"placeholder": "Filter by name", "class": "input-filter"}
+        ),
+        required=False,
+    )
