@@ -31,6 +31,20 @@ select = [
     "I",
 ]
 
+exclude = [
+    ".git",
+    ".ruff_cache",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "build",
+    "dist",
+    "*.egg-info",
+    "*/config",
+    "*/migrations",
+    "manage.py",
+]
+
 [format]
 quote-style = "double"
 
