@@ -1,4 +1,4 @@
-name: Lint & Type Check
+name: ci
 
 on:
   push:
@@ -45,3 +45,7 @@ jobs:
       - name: Run Typos
         run:
           uv run typos
+
+      - name: Run pytest
+        run:
+          uv run pytest
