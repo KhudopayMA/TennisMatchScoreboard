@@ -7,8 +7,8 @@ exclude = [
     "build",
     "dist",
     "*.egg-info",
-    "*/config",
-    "*/migrations",
+    "**/config",
+    "**/migrations",
     "manage.py",
 ]
 
