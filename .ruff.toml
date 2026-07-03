@@ -1,3 +1,6 @@
+line-length = 79
+target-version = "py312"
+
 exclude = [
     ".git",
     ".ruff_cache",
