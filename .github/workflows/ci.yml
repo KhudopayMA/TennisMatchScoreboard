@@ -1,4 +1,4 @@
-name: Lint & Type Check
+name: CI
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "*" ]
 
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -45,3 +45,7 @@ jobs:
       - name: Run Typos
         run:
           uv run typos
+
+      - name: Run pytest
+        run:
+          pytest .
