@@ -22,7 +22,7 @@ jobs:
           version: "latest"
 
       - name: Install project dependencies
-        run: uv sync --frozen
+        run: uv sync
 
       - name: run Ruff linter
         run:
