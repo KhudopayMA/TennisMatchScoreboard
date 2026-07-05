@@ -37,6 +37,7 @@
         <div class="current-match-image"></div>
         <section class="score">
             <form method="post" action="{% url 'match_score'%}">
+                {% csrf_token %}
                 {% if winner %}
                 <p class="winner">The player {{ winner.name }} won</p>
                 {% endif %}

@@ -5,13 +5,16 @@ from django.http import (
     HttpResponseBadRequest,
 )
 from django.template.loader import render_to_string
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 from tennis_match_scoreboard.dtos import MatchScoreDto
 from tennis_match_scoreboard.models import Match
 from tennis_match_scoreboard.services import ScoreService
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class MatchScorePageView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
         match_uuid = request.COOKIES.get("match_uuid")
