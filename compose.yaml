@@ -1,0 +1,34 @@
+name: tennis_match_scoreboard
+
+services:
+  db:
+    container_name: tennis_match_scoreboard_db
+    image: mysql:9.7
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:3306"
+    networks:
+      - app
+  tennis_match_scoreboard:
+    container_name: tennis_match_scoreboard
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image:
+      tennis_match_scoreboard:1.0.0
+    command: >
+      sh -c "uv run python manage.py migrate &&
+             uv run python manage.py collectstatic --noinput &&
+             uv run gunicorn config.wsgi:application --bind 0.0.0.0:8000"
+    env_file:
+      - .env
+    ports:
+      - "${APP_PORT}:8000"
+    networks:
+      - app
+
+networks:
+  app:
+
