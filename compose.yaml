@@ -28,6 +28,20 @@ services:
       - "${APP_PORT}:8000"
     networks:
       - app
+    volumes:
+      - shared_static:/static
+
+    nginx:
+      image: nginx:alpine
+      depends_on:
+        - tennis_match_scoreboard
+      volumes:
+        - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+        - shared_static:/static
+
+
+volumes:
+  shared_static:
 
 networks:
   app:
