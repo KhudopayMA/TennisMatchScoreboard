@@ -36,6 +36,7 @@
             <div class="new-match-image"></div>
             <div class="form-container center">
                 <form method="post" action="{% url 'new_match'%}">
+                    {% csrf_token %}
                     {% if form.non_field_errors %}
                         <p style="color: red;">{{ form.non_field_errors.0 }}</p>
                     {% endif %}
