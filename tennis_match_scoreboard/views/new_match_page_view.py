@@ -4,12 +4,14 @@ from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.template.loader import render_to_string
 from django.urls import reverse
+from django.utils.decorators import method_decorator
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 from tennis_match_scoreboard.forms import NewMatchForm
 from tennis_match_scoreboard.services import NewMatchService
 
-
+@method_decorator(csrf_exempt, name='dispatch')
 class NewMatchPageView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
         form = NewMatchForm()
