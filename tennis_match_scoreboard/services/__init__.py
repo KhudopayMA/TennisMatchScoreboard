@@ -1,7 +1,7 @@
-from .new_match_service import NewMatchService
+from .new_match_service import create_match
 from .score_service import ScoreService
 
 __all__ = [
-    "NewMatchService",
+    "create_match",
     "ScoreService",
 ]

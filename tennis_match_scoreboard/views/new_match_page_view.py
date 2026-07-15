@@ -9,7 +9,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 
 from tennis_match_scoreboard.forms import NewMatchForm
-from tennis_match_scoreboard.services import NewMatchService
+from tennis_match_scoreboard.services import create_match
 
 
 @method_decorator(csrf_exempt, name='dispatch')
@@ -25,7 +25,7 @@ class NewMatchPageView(View):
     def post(self, request: HttpRequest) -> HttpResponse:
         form = NewMatchForm(request.POST)
         if form.is_valid() and not form.errors:
-            match_uuid = NewMatchService.create_match(
+            match_uuid = create_match(
                 player1=form.cleaned_data["player1"],
                 player2=form.cleaned_data["player2"],
             )
