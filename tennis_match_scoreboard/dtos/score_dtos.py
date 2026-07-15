@@ -10,7 +10,7 @@ class GameDto:
 @dataclass(slots=True, kw_only=True)
 class PlayerScoreDto:
     current_game: GameDto
-    won_games: int
+    games: int
     sets: int
 
 
