@@ -1,3 +1,4 @@
+from django.db import transaction
 from django.http import (
     Http404,
     HttpRequest,
@@ -8,7 +9,6 @@ from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.db import transaction
 
 from tennis_match_scoreboard.dtos import MatchScoreDto
 from tennis_match_scoreboard.models import Match
