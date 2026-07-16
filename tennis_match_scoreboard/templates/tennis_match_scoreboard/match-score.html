@@ -1,5 +1,5 @@
 {% load static %}
-<html>
+<html lang="EN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +36,7 @@
         <h1>Current match</h1>
         <div class="current-match-image"></div>
         <section class="score">
-            <form method="post" action="{% url 'match_score'%}">
+            <form method="post" action="{% url 'match_score' %}?match_uuid={{ match_uuid }}">
                 {% csrf_token %}
                 {% if winner %}
                 <p class="winner">The player {{ winner.name }} won</p>

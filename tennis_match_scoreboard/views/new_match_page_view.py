@@ -30,10 +30,9 @@ class NewMatchPageView(View):
                 player2=form.cleaned_data["player2"],
             )
             url = (
-                reverse("match_score") + "?" + urlencode({"uuid": match_uuid})
+                reverse("match_score") + "?" + urlencode({"match_uuid": match_uuid})
             )
-            response = redirect(url, uuid=match_uuid, permanent=True)
-            response.set_cookie("match_uuid", str(match_uuid))
+            response = redirect(url, permanent=True)
             return response
 
         return HttpResponse(

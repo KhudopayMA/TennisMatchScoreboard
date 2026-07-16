@@ -17,7 +17,7 @@ from tennis_match_scoreboard.services import ScoreService
 @method_decorator(csrf_exempt, name='dispatch')
 class MatchScorePageView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
-        match_uuid = request.COOKIES.get("match_uuid")
+        match_uuid = request.GET.get('match_uuid')
         if match_uuid is None:
             raise Http404("Match not found")
         match = Match.objects.get(uuid=match_uuid)
@@ -26,6 +26,7 @@ class MatchScorePageView(View):
             render_to_string(
                 "tennis_match_scoreboard/match-score.html",
                 {
+                    "match_uuid": match_uuid,
                     "player1": match.player1,
                     "player1_score": match_score.player1,
                     "player2": match.player2,
@@ -35,7 +36,7 @@ class MatchScorePageView(View):
         )
 
     def post(self, request: HttpRequest) -> HttpResponse:
-        match_uuid = request.COOKIES.get("match_uuid")
+        match_uuid = request.GET.get('match_uuid')
         if match_uuid is None:
             return HttpResponseBadRequest(
                 "match_uuid param not found in request."
@@ -52,6 +53,7 @@ class MatchScorePageView(View):
             render_to_string(
                 "tennis_match_scoreboard/match-score.html",
                 {
+                    "match_uuid": match_uuid,
                     "player1": score_service.match.player1,
                     "player1_score": score_service.match_score.player1,
                     "player2": score_service.match.player2,
