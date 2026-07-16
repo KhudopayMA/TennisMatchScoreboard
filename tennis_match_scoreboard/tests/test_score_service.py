@@ -86,7 +86,7 @@ class TestScoreService:
             mock_objects.get.return_value = deuce_match
 
             with patch.object(Match, "save", return_value=None):
-                score_service = ScoreService(str(deuce_match.uuid))
+                score_service = ScoreService(deuce_match)
                 score_service.add_point("first")
 
                 assert (
@@ -108,9 +108,7 @@ class TestScoreService:
             mock_objects.get.return_value = player1_next_point_win_game_match
 
             with patch.object(Match, "save", return_value=None):
-                score_service = ScoreService(
-                    str(player1_next_point_win_game_match.uuid)
-                )
+                score_service = ScoreService(player1_next_point_win_game_match)
                 score_service.add_point("first")
 
                 assert score_service.match_score.player1.games > 0
@@ -128,9 +126,7 @@ class TestScoreService:
             mock_objects.get.return_value = next_point_starts_tie_break_match
 
             with patch.object(Match, "save", return_value=None):
-                score_service = ScoreService(
-                    str(next_point_starts_tie_break_match.uuid)
-                )
+                score_service = ScoreService(next_point_starts_tie_break_match)
                 score_service.add_point("first")
 
                 assert score_service.match_score.tie_break is True

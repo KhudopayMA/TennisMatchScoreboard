@@ -34,15 +34,15 @@ class ScoreService:
         )
 
     def add_point(self, player_name: str) -> None:
-        point_winner, point_loser = self.__resolve_players(player_name)
+        point_winner, point_loser = self._resolve_players(player_name)
         if self.match_score.tie_break:
-            self.__add_tie_break_point(point_winner, point_loser)
+            self._add_tie_break_point(point_winner, point_loser)
         else:
-            self.__add_standard_point(point_winner, point_loser)
+            self._add_standard_point(point_winner, point_loser)
         self.match.score = asdict(self.match_score)
         self.match.save()
 
-    def __resolve_players(
+    def _resolve_players(
         self, player_name: str
     ) -> tuple[PlayerScoreDto, PlayerScoreDto]:
         if self.match.player1.name == player_name:
@@ -50,14 +50,14 @@ class ScoreService:
         else:
             return self.match_score.player2, self.match_score.player1
 
-    def __add_standard_point(
+    def _add_standard_point(
         self, point_winner: PlayerScoreDto, point_loser: PlayerScoreDto
     ) -> None:
         """
         Implements logic of adding standard points.
         """
         if point_winner.current_game.advantage:
-            self.__add_game(point_winner, point_loser)
+            self._add_game(point_winner, point_loser)
         elif point_loser.current_game.advantage:
             point_loser.current_game.advantage = False
         elif (
@@ -75,22 +75,22 @@ class ScoreService:
                 - self.TENNIS_POINTS.inverse[point_loser.current_game.points]
                 >= 2
             ):
-                self.__add_game(point_winner, point_loser)
+                self._add_game(point_winner, point_loser)
 
-    def __add_game(
+    def _add_game(
         self, point_winner: PlayerScoreDto, point_loser: PlayerScoreDto
     ) -> None:
-        self.__reset_game()
+        self._reset_game()
         point_winner.games += 1
         if point_winner.games == 6 and point_loser.games == 6:
             self.match_score.tie_break = True
         elif point_winner.games >= 6 and (
             point_winner.games - point_loser.games >= 2
         ):
-            self.__add_set(point_winner)
+            self._add_set(point_winner)
 
-    def __add_set(self, point_winner: PlayerScoreDto) -> None:
-        self.__reset_set()
+    def _add_set(self, point_winner: PlayerScoreDto) -> None:
+        self._reset_set()
         point_winner.sets += 1
         if point_winner.sets >= 2:
             self.match.winner = (
@@ -99,18 +99,18 @@ class ScoreService:
                 else self.match.player2
             )
 
-    def __reset_game(self) -> None:
+    def _reset_game(self) -> None:
         self.match_score.player1.current_game.points = 0
         self.match_score.player2.current_game.points = 0
 
         self.match_score.player1.current_game.advantage = False
         self.match_score.player2.current_game.advantage = False
 
-    def __reset_set(self) -> None:
+    def _reset_set(self) -> None:
         self.match_score.player1.games = 0
         self.match_score.player2.games = 0
 
-    def __add_tie_break_point(
+    def _add_tie_break_point(
         self, point_winner: PlayerScoreDto, point_loser: PlayerScoreDto
     ) -> None:
         """
@@ -125,4 +125,4 @@ class ScoreService:
             )
             >= 2
         ):
-            self.__add_set(point_winner)
+            self._add_set(point_winner)
