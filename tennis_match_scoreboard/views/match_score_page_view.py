@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.db import transaction
 
 from tennis_match_scoreboard.dtos import MatchScoreDto
 from tennis_match_scoreboard.models import Match
@@ -46,10 +47,11 @@ class MatchScorePageView(View):
             return HttpResponseBadRequest(
                 "player_name param not found in request."
             )
-        match = Match.objects.get(uuid=match_uuid)
-        score_service = ScoreService(match=match)
-        if not score_service.match.winner:
-            score_service.add_point(player_name=player_name)
+        with transaction.atomic():
+            match = Match.objects.select_for_update().get(uuid=match_uuid)
+            score_service = ScoreService(match=match)
+            if not score_service.match.winner:
+                score_service.add_point(player_name=player_name)
         return HttpResponse(
             render_to_string(
                 "tennis_match_scoreboard/match-score.html",
