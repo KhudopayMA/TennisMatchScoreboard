@@ -12,7 +12,7 @@ from tennis_match_scoreboard.forms import NewMatchForm
 from tennis_match_scoreboard.services import create_match
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class NewMatchPageView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
         form = NewMatchForm()
@@ -30,7 +30,9 @@ class NewMatchPageView(View):
                 player2=form.cleaned_data["player2"],
             )
             url = (
-                reverse("match_score") + "?" + urlencode({"match_uuid": match_uuid})
+                reverse("match_score")
+                + "?"
+                + urlencode({"match_uuid": match_uuid})
             )
             response = redirect(url, permanent=True)
             return response

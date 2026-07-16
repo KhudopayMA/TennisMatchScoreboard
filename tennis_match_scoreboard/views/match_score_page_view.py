@@ -14,10 +14,10 @@ from tennis_match_scoreboard.models import Match
 from tennis_match_scoreboard.services import ScoreService
 
 
-@method_decorator(csrf_exempt, name='dispatch')
+@method_decorator(csrf_exempt, name="dispatch")
 class MatchScorePageView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
-        match_uuid = request.GET.get('match_uuid')
+        match_uuid = request.GET.get("match_uuid")
         if match_uuid is None:
             raise Http404("Match not found")
         match = Match.objects.get(uuid=match_uuid)
@@ -36,7 +36,7 @@ class MatchScorePageView(View):
         )
 
     def post(self, request: HttpRequest) -> HttpResponse:
-        match_uuid = request.GET.get('match_uuid')
+        match_uuid = request.GET.get("match_uuid")
         if match_uuid is None:
             return HttpResponseBadRequest(
                 "match_uuid param not found in request."
