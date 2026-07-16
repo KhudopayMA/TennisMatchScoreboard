@@ -13,8 +13,8 @@ class ScoreService:
 
     TENNIS_POINTS: bidict[int, int] = bidict({0: 0, 1: 15, 2: 30, 3: 40})
 
-    def __init__(self, match_uuid: str) -> None:
-        self.match = Match.objects.get(uuid=match_uuid)
+    def __init__(self, match: Match) -> None:
+        self.match = match
         self.match_score = MatchScoreDto(
             player1=PlayerScoreDto(
                 sets=self.match.score["player1"]["sets"],

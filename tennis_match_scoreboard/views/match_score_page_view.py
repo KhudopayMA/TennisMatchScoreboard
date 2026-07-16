@@ -46,7 +46,8 @@ class MatchScorePageView(View):
             return HttpResponseBadRequest(
                 "player_name param not found in request."
             )
-        score_service = ScoreService(match_uuid=match_uuid)
+        match = Match.objects.get(uuid=match_uuid)
+        score_service = ScoreService(match=match)
         if not score_service.match.winner:
             score_service.add_point(player_name=player_name)
         return HttpResponse(
