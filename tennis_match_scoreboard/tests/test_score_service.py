@@ -8,7 +8,7 @@ from tennis_match_scoreboard.services import ScoreService
 
 
 class TestScoreService(TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.player1 = Player.objects.create(name="first")
         self.player2 = Player.objects.create(name="second")
 
