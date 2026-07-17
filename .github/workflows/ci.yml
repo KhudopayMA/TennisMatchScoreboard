@@ -70,4 +70,4 @@ jobs:
 
       - name: Run django tests
         run:
-           python manage.py test
+           uv run python manage.py test
