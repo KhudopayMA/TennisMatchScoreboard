@@ -68,6 +68,6 @@ jobs:
         run:
           uv run typos
 
-      - name: Run django tests
+      - name: Run tests
         run:
-           uv run python manage.py test
+           uv run pytest --cov=. --cov-fail-under=60 --cov-report=term-missing
