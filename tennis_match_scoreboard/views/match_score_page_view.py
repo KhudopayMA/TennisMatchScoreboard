@@ -61,6 +61,6 @@ class MatchScorePageView(View):
                     "player2_score": score_service.match_score.player2,
                     "winner": score_service.match.winner,
                 },
-                request=request
+                request=request,
             )
         )

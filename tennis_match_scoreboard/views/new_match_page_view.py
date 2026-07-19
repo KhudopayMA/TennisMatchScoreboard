@@ -17,7 +17,7 @@ class NewMatchPageView(View):
             render_to_string(
                 "tennis_match_scoreboard/new-match.html",
                 {"form": form},
-                request=request
+                request=request,
             )
         )
 
