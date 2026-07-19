@@ -6,9 +6,7 @@ from django.http import (
     HttpResponseBadRequest,
 )
 from django.template.loader import render_to_string
-from django.utils.decorators import method_decorator
 from django.views import View
-from django.views.decorators.csrf import csrf_exempt
 
 from tennis_match_scoreboard.dtos import MatchScoreDto
 from tennis_match_scoreboard.models import Match
