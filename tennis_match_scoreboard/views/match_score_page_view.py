@@ -15,7 +15,6 @@ from tennis_match_scoreboard.models import Match
 from tennis_match_scoreboard.services import ScoreService
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class MatchScorePageView(View):
     def get(self, request: HttpRequest) -> HttpResponse:
         match_uuid = request.GET.get("match_uuid")
@@ -33,6 +32,7 @@ class MatchScorePageView(View):
                     "player2": match.player2,
                     "player2_score": match_score.player2,
                 },
+                request=request,
             )
         )
 
@@ -63,5 +63,6 @@ class MatchScorePageView(View):
                     "player2_score": score_service.match_score.player2,
                     "winner": score_service.match.winner,
                 },
+                request=request
             )
         )
