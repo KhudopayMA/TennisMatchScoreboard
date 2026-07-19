@@ -125,4 +125,5 @@ class ScoreService:
             )
             >= 2
         ):
+            self.match_score.tie_break = False
             self._add_set(point_winner)
