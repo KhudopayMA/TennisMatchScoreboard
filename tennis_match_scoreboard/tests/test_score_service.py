@@ -30,6 +30,19 @@ class TestScoreService(TestCase):
             score=asdict(self._next_point_starts_tie_break_match())
         )
 
+        self.tie_break_match = Match.objects.create(
+            player1=self.player1,
+            player2=self.player2,
+            score=asdict(self._tie_break_match_score())
+        )
+
+        self.add_point_win_tie_break_match = Match.objects.create(
+            player1=self.player1,
+            player2=self.player2,
+            score=asdict(self._add_point_win_tie_break_match_score())
+        )
+
+
 
 
     @staticmethod
@@ -86,6 +99,42 @@ class TestScoreService(TestCase):
 
         return match_score
 
+    @staticmethod
+    def _tie_break_match_score() -> MatchScoreDto:
+        match_score = MatchScoreDto(
+            player1=PlayerScoreDto(
+                sets=1,
+                games=6,
+                current_game=GameDto(points=0, advantage=False),
+            ),
+            player2=PlayerScoreDto(
+                sets=1,
+                games=6,
+                current_game=GameDto(points=0, advantage=False),
+            ),
+            tie_break=True,
+        )
+
+        return match_score
+
+    @staticmethod
+    def _add_point_win_tie_break_match_score() -> MatchScoreDto:
+        match_score = MatchScoreDto(
+            player1=PlayerScoreDto(
+                sets=1,
+                games=6,
+                current_game=GameDto(points=6, advantage=False),
+            ),
+            player2=PlayerScoreDto(
+                sets=1,
+                games=6,
+                current_game=GameDto(points=0, advantage=False),
+            ),
+            tie_break=True,
+        )
+
+        return match_score
+
     def test_add_point_when_deuce(self) -> None:
         """ Test add a point to the match in a deuce state """
         score_service = ScoreService(self.deuce_match)
@@ -118,3 +167,21 @@ class TestScoreService(TestCase):
         score_service.add_point("first")
 
         assert score_service.match_score.tie_break is True
+
+    def test_tie_break_add_point(self) -> None:
+        """ Test add a point when the match in tie-break mode """
+
+        score_service = ScoreService(self.tie_break_match)
+        score_service.add_point("first")
+
+        assert score_service.match_score.tie_break is True
+        assert score_service.match_score.player1.current_game.points == 1
+
+    def test_win_tie_break_add_point(self) -> None:
+        """ Test player1 win when add a point when the match in tie-break mode """
+
+        score_service = ScoreService(self.add_point_win_tie_break_match)
+        score_service.add_point("first")
+
+        assert score_service.match_score.tie_break is False
+        assert score_service.match_score.player1.sets == 2
