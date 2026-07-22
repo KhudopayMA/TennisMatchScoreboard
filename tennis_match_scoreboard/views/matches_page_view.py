@@ -14,11 +14,19 @@ class MatchesPageView(View):
         filter_form.is_valid()
         player_name = filter_form.cleaned_data["player_name"]
         if player_name:
-            matches = Match.objects.filter(
-                Q(player1__name=player_name) | Q(player2__name=player_name)
-            ).select_related("player1", "player2").order_by("id")
+            matches = (
+                Match.objects.filter(
+                    Q(player1__name=player_name) | Q(player2__name=player_name)
+                )
+                .select_related("player1", "player2")
+                .order_by("id")
+            )
         else:
-            matches = Match.objects.all().select_related("player1", "player2").order_by("id")
+            matches = (
+                Match.objects.all()
+                .select_related("player1", "player2")
+                .order_by("id")
+            )
         paginator = Paginator(matches, 5)
         request_page_number = request.GET.get("page")
         if request_page_number is None:
