@@ -1,5 +1,5 @@
 {% load static %}
-<html>
+<html lang="EN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,7 +36,8 @@
         <h1>Current match</h1>
         <div class="current-match-image"></div>
         <section class="score">
-            <form method="post" action="{% url 'match_score'%}">
+            <form method="post" action="{% url 'match_score' %}?match_uuid={{ match_uuid }}">
+                {% csrf_token %}
                 {% if winner %}
                 <p class="winner">The player {{ winner.name }} won</p>
                 {% endif %}
@@ -53,8 +54,14 @@
                 <tr class="player1">
                     <td class="table-text">{{ player1.name }}</td>
                     <td class="table-text">{{ player1_score.sets }}</td>
-                    <td class="table-text">{{ player1_score.won_games }}</td>
-                    <td class="table-text">{{ player1_score.current_game.points }}</td>
+                    <td class="table-text">{{ player1_score.games }}</td>
+                    <td class="table-text">
+                        {% if player1_score.current_game.advantage %}
+                            {{ "AD" }}
+                        {% else %}
+                            {{ player1_score.current_game.points }}
+                        {% endif %}
+                    </td>
                     {% if not winner %}
                         <td class="table-text">
                             <button  class="score-btn" name="player_name" value={{player1.name}}>Score</button >
@@ -64,8 +71,14 @@
                 <tr class="player2">
                     <td class="table-text">{{ player2.name }}</td>
                     <td class="table-text">{{ player2_score.sets }}</td>
-                    <td class="table-text">{{ player2_score.won_games }}</td>
-                    <td class="table-text">{{ player2_score.current_game.points }}</td>
+                    <td class="table-text">{{ player2_score.games }}</td>
+                    <td class="table-text">
+                        {% if player2_score.current_game.advantage %}
+                            {{ "AD" }}
+                        {% else %}
+                            {{ player2_score.current_game.points }}
+                        {% endif %}
+                    </td>
                     {% if not winner %}
                     <td class="table-text">
                         <button  class="score-btn" name="player_name" value={{player2.name}}>Score</button >
