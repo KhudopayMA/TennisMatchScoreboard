@@ -31,6 +31,10 @@ DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
 USE_X_FORWARDED_HOST = True
 
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,7 +45,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'widget_tweaks',
-    "tennis_match_scoreboard"
+    "tennis_match_scoreboard",
+    "debug_toolbar"
 ]
 
 MIDDLEWARE = [
@@ -52,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware'
 ]
 
 ROOT_URLCONF = 'config.urls'
